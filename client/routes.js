@@ -2,10 +2,11 @@
 import React from 'react';
 import { Route, IndexRoute } from 'react-router';
 import App from './modules/App/App';
+import Auth from './util/auth';
 
 // require.ensure polyfill for node
 if (typeof require.ensure !== 'function') {
-  require.ensure = function requireModule(deps, callback) {
+  require.ensure = function (deps, callback) {
     callback(require);
   };
 }
@@ -16,8 +17,12 @@ if (typeof require.ensure !== 'function') {
  */
 if (process.env.NODE_ENV !== 'production') {
   // Require async routes only in development for react-hot-reloader to work.
+  require('./modules/Home/pages/HomePage/HomePage');
+  require('./modules/Auth/pages/LoginPage/LoginPage');
+  require('./modules/Auth/pages/SignupPage/SignupPage');
+  require('./modules/Dashboard/pages/DashboardPage/DashboardPage');
+  require('./modules/Profile/pages/ProfilePage/ProfilePage');
   require('./modules/Post/pages/PostListPage/PostListPage');
-  require('./modules/Post/pages/PostDetailPage/PostDetailPage');
 }
 
 // react-router setup with code-splitting
@@ -27,15 +32,47 @@ export default (
     <IndexRoute
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Post/pages/PostListPage/PostListPage').default);
+          cb(null, require('./modules/Home/pages/HomePage/HomePage').default);
         });
       }}
     />
     <Route
-      path="/posts/:slug-:cuid"
+      path="/login"
       getComponent={(nextState, cb) => {
         require.ensure([], require => {
-          cb(null, require('./modules/Post/pages/PostDetailPage/PostDetailPage').default);
+          cb(null, require('./modules/Auth/pages/LoginPage/LoginPage').default);
+        });
+      }}
+    />
+    <Route
+      path="/signup"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Auth/pages/SignupPage/SignupPage').default);
+        });
+      }}
+    />
+    <Route
+      path="/dashboard"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Dashboard/pages/DashboardPage/DashboardPage').default);
+        });
+      }}
+    />
+    <Route
+      path="/profile"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Profile/pages/ProfilePage/ProfilePage').default);
+        });
+      }}
+    />
+    <Route
+      path="/posts"
+      getComponent={(nextState, cb) => {
+        require.ensure([], require => {
+          cb(null, require('./modules/Post/pages/PostListPage/PostListPage').default);
         });
       }}
     />
