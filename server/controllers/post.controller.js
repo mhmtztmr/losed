@@ -10,13 +10,12 @@ import sanitizeHtml from 'sanitize-html';
  * @returns void
  */
 export function getPosts(req, res) {
-  console.log('heyy');
-  // Post.find().sort('-dateAdded').exec((err, posts) => {
-  //   if (err) {
-  //     res.status(500).send(err);
-  //   }
-    res.json({});
-  // });
+  Post.find().sort('-dateAdded').exec((err, posts) => {
+    if (err) {
+      res.status(500).send(err);
+    }
+    res.json({ posts });
+  });
 }
 
 /**

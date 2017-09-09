@@ -1,4 +1,4 @@
-import {callApi} from '../../util/apiCaller';
+import callApi from '../../util/apiCaller';
 
 // Export Constants
 export const ADD_POST = 'ADD_POST';
@@ -33,6 +33,7 @@ export function addPosts(posts) {
 }
 
 export function fetchPosts() {
+  console.log('fetchhh');
   return (dispatch) => {
     return callApi('posts').then(res => {
       dispatch(addPosts(res.posts));

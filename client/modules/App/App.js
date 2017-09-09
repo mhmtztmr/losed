@@ -7,13 +7,12 @@ import styles from './App.css';
 // Import Components
 import Helmet from 'react-helmet';
 import DevTools from './components/DevTools';
-// import Header from './components/Header/Header';
-import TopBar from './components/Header/TopBar';
-// import Footer from './components/Footer/Footer';
+import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 
 // Import Actions
 import { toggleAddPost } from './AppActions';
-// import { switchLanguage } from '../../modules/Intl/IntlActions';
+import { switchLanguage } from '../../modules/Intl/IntlActions';
 
 export class App extends Component {
   constructor(props) {
@@ -22,7 +21,7 @@ export class App extends Component {
   }
 
   componentDidMount() {
-    this.setState({ isMounted: true }); // eslint-disable-line
+    this.setState({isMounted: true}); // eslint-disable-line
   }
 
   toggleAddPostSection = () => {
@@ -35,8 +34,8 @@ export class App extends Component {
         {this.state.isMounted && !window.devToolsExtension && process.env.NODE_ENV === 'development' && <DevTools />}
         <div>
           <Helmet
-            title="Shiptr"
-            titleTemplate="%s - Shiptr"
+            title="MERN Starter - Blog App"
+            titleTemplate="%s - Blog App"
             meta={[
               { charset: 'utf-8' },
               {
@@ -47,27 +46,17 @@ export class App extends Component {
                 name: 'viewport',
                 content: 'width=device-width, initial-scale=1',
               },
-              {
-                name: 'google-signin-client_id',
-                content: '969152540981-fht8suqfarr7cbfsbtoagufrme94r14m.apps.googleusercontent.com',
-              },
-            ]}
-            script={[
-              {
-                src: 'https://apis.google.com/js/platform.js',
-              },
             ]}
           />
-          {/* <Header
+          <Header
             switchLanguage={lang => this.props.dispatch(switchLanguage(lang))}
             intl={this.props.intl}
             toggleAddPost={this.toggleAddPostSection}
-          />*/}
-          <TopBar />
+          />
           <div className={styles.container}>
             {this.props.children}
           </div>
-          {/* <Footer />*/}
+          <Footer />
         </div>
       </div>
     );

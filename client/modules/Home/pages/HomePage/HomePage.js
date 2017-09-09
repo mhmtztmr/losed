@@ -4,11 +4,8 @@ import { Link } from 'react-router';
 function HomePage() {
   return (
     <div>
-      <Link to={'/login'} >
-        Login
-      </Link>
-      <Link to={'/signup'} >
-        Signup
+      <Link to={'/posts'} >
+        Posts
       </Link>
     </div>
   );
