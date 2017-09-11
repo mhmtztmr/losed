@@ -40,7 +40,7 @@ class PostListPage extends Component {
 }
 
 // Actions required to provide data for this component to render in sever side.
-PostListPage.need = [() => {console.log('fethserverrr'); return fetchPosts(); }];
+PostListPage.need = [() => { console.log('fethserverrr'); return fetchPosts(); }];  // eslint-disable-line
 
 // Retrieve data from store as props
 function mapStateToProps(state) {

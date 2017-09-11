@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
+import RaisedButton from 'material-ui/RaisedButton';
 
 function HomePage() {
   return (
@@ -7,6 +8,7 @@ function HomePage() {
       <Link to={'/posts'} >
         Posts
       </Link>
+      <RaisedButton type="submit" label="Material UI Test Button" primary />
     </div>
   );
 }

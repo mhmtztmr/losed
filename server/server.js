@@ -5,6 +5,8 @@ import bodyParser from 'body-parser';
 import path from 'path';
 import IntlWrapper from '../client/modules/Intl/IntlWrapper';
 
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 // Webpack Requirements
 import webpack from 'webpack';
 import config from '../webpack.config.dev';
@@ -84,7 +86,7 @@ const renderFullPage = (html, initialState) => {
         <script>
           window.__INITIAL_STATE__ = ${JSON.stringify(initialState)};
           ${process.env.NODE_ENV === 'production' ?
-          `//<![CDATA[
+      `//<![CDATA[
           window.webpackManifest = ${JSON.stringify(chunkManifest)};
           //]]>` : ''}
         </script>
@@ -119,15 +121,17 @@ app.use((req, res, next) => {
 
     const store = configureStore();
 
-    console.log('state before', store.getState());
+    console.log(`state before ${store.getState()}`); // eslint-disable-line
     return fetchComponentData(store, renderProps.components, renderProps.params)
       .then(() => {
-        console.log('state after', store.getState());
+        console.log(`state after ${store.getState()}`); // eslint-disable-line
         const initialView = renderToString(
           <Provider store={store}>
-            <IntlWrapper>
-              <RouterContext {...renderProps} />
-            </IntlWrapper>
+            <MuiThemeProvider>
+              <IntlWrapper>
+                <RouterContext {...renderProps} />
+              </IntlWrapper>
+            </MuiThemeProvider>
           </Provider>
         );
         const finalState = store.getState();
