@@ -5,10 +5,20 @@ import RaisedButton from 'material-ui/RaisedButton';
 function HomePage() {
   return (
     <div>
-      <Link to={'/posts'} >
-        Posts
-      </Link>
-      <RaisedButton type="submit" label="Material UI Test Button" primary />
+      <div>
+        <Link to={'/login'} >
+          Login
+        </Link>
+        <Link to={'/signup'} >
+          Signup
+        </Link>
+      </div>
+      <div>
+        <Link to={'/posts'} >
+          Posts
+        </Link>
+        <RaisedButton type="submit" label="Material UI Test Button" primary />
+      </div>
     </div>
   );
 }
