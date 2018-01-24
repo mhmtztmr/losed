@@ -1,5 +1,6 @@
 import {
   LOGIN_SUCCESS,
+  LOGOUT_SUCCESS,
 } from './AuthActions';
 
 // Initial State
@@ -11,11 +12,19 @@ const initialState = {
 const AuthReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_SUCCESS: {
-      const { user, isAuthenticated } = action.payload;
+      const { user, isAuthenticated, token } = action.payload;
 
       return {
         user,
         isAuthenticated,
+        token,
+      };
+    }
+
+    case LOGOUT_SUCCESS: {
+      return {
+        isAuthenticated: false,
+        token: null,
       };
     }
 

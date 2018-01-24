@@ -1,4 +1,4 @@
-import callApi from '../../util/apiCaller';
+import { callApi } from '../../util/apiCaller';
 
 // Export Constants
 export const ADD_POST = 'ADD_POST';
@@ -33,9 +33,9 @@ export function addPosts(posts) {
 }
 
 export function fetchPosts() {
-  window.console.log('fetchhh');
-  return (dispatch) => {
-    return callApi('posts').then(res => {
+  console.log('fetchhh'); // eslint-disable-line
+  return (dispatch, getState) => {
+    return callApi('posts', undefined, undefined, getState().auth.token).then(res => {
       dispatch(addPosts(res.posts));
     });
   };

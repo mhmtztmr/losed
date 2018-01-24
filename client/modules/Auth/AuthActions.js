@@ -6,6 +6,7 @@ import { browserHistory } from 'react-router';
 export const LOGIN_START = 'LOGIN_START';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS';
 export const SIGNUP_START = 'SIGNUP_START';
 export const SIGNUP_FINISH = 'SIGNUP_FINISH';
 
@@ -37,6 +38,7 @@ export default {
       payload: {
         user: res.user,
         isAuthenticated: true,
+        token: res.token,
       },
     };
   },
@@ -59,9 +61,21 @@ export default {
       }).then(res => {
         dispatch(this.loginSuccess(res));
         Auth.authenticateUser(res.token);
-        browserHistory.push('/dashboard');
+        browserHistory.push('/');
       },
         err => dispatch(this.loginFailure(err)));
+    };
+  },
+  logoutSuccess() {
+    return {
+      type: LOGOUT_SUCCESS,
+    };
+  },
+  logoutRequest() {
+    return (dispatch) => {
+      Auth.deauthenticateUser();
+      browserHistory.push('/');
+      dispatch(this.logoutSuccess());
     };
   },
 };

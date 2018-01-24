@@ -8,18 +8,19 @@ import IntlWrapper from './modules/Intl/IntlWrapper';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
 // Import Routes
-import routes from './routes';
+import getRoutes from './routes';
 
 // Base stylesheet
 require('./main.css');
 
 export default function App(props) {
+  const { store } = props;
   return (
-    <Provider store={props.store}>
+    <Provider store={store}>
       <MuiThemeProvider>
         <IntlWrapper>
           <Router history={browserHistory}>
-            {routes}
+            {getRoutes(store)}
           </Router>
         </IntlWrapper>
       </MuiThemeProvider>

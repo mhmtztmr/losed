@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const postSchema = new Schema({
+const foundSchema = new Schema({
   name: { type: 'String', required: true },
   title: { type: 'String', required: true },
   content: { type: 'String', required: true },
@@ -11,4 +11,4 @@ const postSchema = new Schema({
   user: { type: Schema.Types.ObjectId, ref: 'User' },
 });
 
-export default mongoose.model('Post', postSchema);
+export default mongoose.model('Found', foundSchema);

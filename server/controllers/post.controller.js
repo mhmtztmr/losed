@@ -10,12 +10,23 @@ import sanitizeHtml from 'sanitize-html';
  * @returns void
  */
 export function getPosts(req, res) {
-  Post.find().sort('-dateAdded').exec((err, posts) => {
-    if (err) {
-      res.status(500).send(err);
-    }
-    res.json({ posts });
-  });
+  Post
+    .find({ user: req.user._id })
+    .select('user name title content')
+    .sort('-dateAdded')
+    .populate({
+      path: 'user',
+      select: 'name email posts -_id',
+      options: { limit: 5 },
+      populate: { path: 'posts', select: 'title -_id' }
+    })
+    .exec((err, posts) => {
+      console.log('err', err);
+      if (err) {
+        res.status(500).send(err);
+      }
+      res.json({ posts });
+    });
 }
 
 /**
@@ -38,11 +49,22 @@ export function addPost(req, res) {
 
   newPost.slug = slug(newPost.title.toLowerCase(), { lowercase: true });
   newPost.cuid = cuid();
+  newPost.user = req.user;
   newPost.save((err, saved) => {
+    console.log(err);
     if (err) {
       res.status(500).send(err);
+    } else {
+      newPost.user.posts.push(saved._id);
+      newPost.user.save((e) => {
+        console.log(e);
+        if (e) {
+          res.status(500).send(e);
+        } else {
+          res.json({ post: saved });
+        }
+      });
     }
-    res.json({ post: saved });
   });
 }
 

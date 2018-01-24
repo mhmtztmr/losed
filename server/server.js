@@ -1,11 +1,18 @@
 import Express from 'express';
 import compression from 'compression';
+import passport from 'passport';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import path from 'path';
 import IntlWrapper from '../client/modules/Intl/IntlWrapper';
-
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
+// load passport strategies
+import LocalSignupStrategy from './auth/local/local-signup';
+import LocalLoginStrategy from './auth/local/local-login';
+// pass the authorization checker middleware
+import AuthCheckMiddleware from './auth/local/auth-check';
 
 // Webpack Requirements
 import webpack from 'webpack';
@@ -32,10 +39,14 @@ import { match, RouterContext } from 'react-router';
 import Helmet from 'react-helmet';
 
 // Import required modules
-import routes from '../client/routes';
+import getRoutes from '../client/routes';
 import { fetchComponentData } from './util/fetchData';
 import posts from './routes/post.routes';
+import losts from './routes/lost.routes';
+import founds from './routes/found.routes';
 import pages from './routes/pages.routes';
+import auth from './routes/auth.routes';
+import users from './routes/user.routes';
 import dummyData from './dummyData';
 import serverConfig from './config';
 
@@ -53,13 +64,28 @@ mongoose.connect(serverConfig.mongoURL, (error) => {
   dummyData();
 });
 
+app.use(cookieParser());
+
+// Use the passport package in our application
+app.use(passport.initialize());
+
+// load passport strategies
+passport.use('local-signup', LocalSignupStrategy);
+passport.use('local-login', LocalLoginStrategy);
+// pass the authorization checker middleware
+app.use('/api', AuthCheckMiddleware);
+
 // Apply body Parser and server public assets and routes
 app.use(compression());
 app.use(bodyParser.json({ limit: '20mb' }));
 app.use(bodyParser.urlencoded({ limit: '20mb', extended: false }));
 app.use(Express.static(path.resolve(__dirname, '../dist/client')));
+// app.use(morgan('dev'));
+app.use('/auth', auth);
+app.use('/api', users);
 app.use('/api', posts);
-
+app.use('/api', losts);
+app.use('/api', founds);
 app.use('/', pages);
 
 // Render Initial HTML
@@ -109,7 +135,11 @@ const renderError = err => {
 
 // Server Side Rendering based on routes matched by React-router.
 app.use((req, res, next) => {
-  match({ routes, location: req.url }, (err, redirectLocation, renderProps) => {
+  const token = req.cookies && req.cookies.token;
+  const isAuthenticated = token && token.length > 0;
+  const store = configureStore({ auth: { token, isAuthenticated } });
+
+  match({ routes: getRoutes(store), location: req.url }, (err, redirectLocation, renderProps) => {
     if (err) {
       return res.status(500).end(renderError(err));
     }
@@ -121,13 +151,10 @@ app.use((req, res, next) => {
     if (!renderProps) {
       return next();
     }
-
-    const store = configureStore();
-
-    console.log(`state before ${store.getState()}`); // eslint-disable-line
+    console.log('state before', store.getState()); // eslint-disable-line
     return fetchComponentData(store, renderProps.components, renderProps.params)
       .then(() => {
-        console.log(`state after ${store.getState()}`); // eslint-disable-line
+        console.log('state after', store.getState()); // eslint-disable-line
         const initialView = renderToString(
           <Provider store={store}>
             <MuiThemeProvider>

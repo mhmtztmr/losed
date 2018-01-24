@@ -1,4 +1,19 @@
 import storage from './storage';
+import cookie from './cookie';
+
+function saveAuthToken(token) {
+  const expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+
+  cookie.set({
+    name: 'token',
+    value: token,
+    expires,
+  });
+}
+
+function removeAuthToken() {
+  cookie.unset('token');
+}
 
 class Auth {
 
@@ -9,6 +24,7 @@ class Auth {
    */
   static authenticateUser(token) {
     storage.setItem('token', token);
+    saveAuthToken(token);
   }
 
   /**
@@ -26,6 +42,7 @@ class Auth {
    */
   static deauthenticateUser() {
     storage.removeItem('token');
+    removeAuthToken();
   }
 
   /**
