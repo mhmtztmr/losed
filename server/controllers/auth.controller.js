@@ -157,3 +157,35 @@ export function login(req, res, next) {
     });
   })(req, res, next);
 }
+
+/**
+ * Auth
+ * @param req
+ * @param res
+ * @returns void
+ */
+export function googleLogin(req, res, next) {
+  console.log('ttttttttttttttttttt');
+  return passport.authenticate('google', (err, token, userData) => {
+    if (err) {
+      if (err.name === 'IncorrectCredentialsError') {
+        return res.status(400).json({
+          success: false,
+          message: err.message,
+        });
+      }
+
+      return res.status(400).json({
+        success: false,
+        message: 'Could not process the form.',
+      });
+    }
+
+    return res.json({
+      success: true,
+      message: 'You have successfully logged in!',
+      token,
+      user: userData,
+    });
+  })(req, res, next);
+}

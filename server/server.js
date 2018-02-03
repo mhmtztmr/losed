@@ -11,6 +11,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 // load passport strategies
 import LocalSignupStrategy from './auth/local/local-signup';
 import LocalLoginStrategy from './auth/local/local-login';
+import GoogleLoginStrategy from './auth/google/google-login';
 // pass the authorization checker middleware
 import AuthCheckMiddleware from './auth/local/auth-check';
 
@@ -72,6 +73,7 @@ app.use(passport.initialize());
 // load passport strategies
 passport.use('local-signup', LocalSignupStrategy);
 passport.use('local-login', LocalLoginStrategy);
+passport.use(GoogleLoginStrategy);
 // pass the authorization checker middleware
 app.use('/api', AuthCheckMiddleware);
 

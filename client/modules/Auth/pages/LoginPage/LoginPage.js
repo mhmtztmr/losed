@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { GoogleLogin } from 'react-google-login';
 import LoginForm from '../../components/LoginForm';
 import authActions from '../../AuthActions';
 
@@ -23,6 +24,7 @@ class LoginPage extends Component {
 
     this.processForm = this.processForm.bind(this);
     this.changeUser = this.changeUser.bind(this);
+    this.responseGoogle = this.responseGoogle.bind(this);
   }
 
   /**
@@ -54,14 +56,28 @@ class LoginPage extends Component {
     });
   }
 
+  responseGoogle(response) {
+    console.log(response);
+    const { dispatch } = this.props;
+    dispatch(authActions.loginRequestGoogle(response.tokenId));
+  }
+
   render() {
-    return (<LoginForm
-      onSubmit={this.processForm}
-      onChange={this.changeUser}
-      errors={this.state.errors}
-      successMessage={this.state.successMessage}
-      user={this.state.user}
-    />);
+    return <div>
+      <LoginForm
+        onSubmit={this.processForm}
+        onChange={this.changeUser}
+        errors={this.state.errors}
+        successMessage={this.state.successMessage}
+        user={this.state.user}
+      />
+      <GoogleLogin
+        clientId="315747158875-oob0scjn1hh0o8a2qijvufbmmv4tevh8.apps.googleusercontent.com"
+        buttonText="Login with Google"
+        onSuccess={this.responseGoogle}
+        onFailure={this.responseGoogle}
+      />
+    </div>;
   }
 }
 

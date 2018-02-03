@@ -66,6 +66,19 @@ export default {
         err => dispatch(this.loginFailure(err)));
     };
   },
+  loginRequestGoogle(token) {
+    return (dispatch) => {
+      dispatch(this.loginStart());
+      return callAuth('google-login', 'post', {
+        token
+      }).then(res => {
+        dispatch(this.loginSuccess(res));
+        Auth.authenticateUser(res.token);
+        browserHistory.push('/');
+      },
+        err => dispatch(this.loginFailure(err)));
+    };
+  },
   logoutSuccess() {
     return {
       type: LOGOUT_SUCCESS,
