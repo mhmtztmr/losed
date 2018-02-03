@@ -63,7 +63,7 @@ class LoginPage extends Component {
   }
 
   render() {
-    return <div>
+    return (<div>
       <LoginForm
         onSubmit={this.processForm}
         onChange={this.changeUser}
@@ -77,7 +77,7 @@ class LoginPage extends Component {
         onSuccess={this.responseGoogle}
         onFailure={this.responseGoogle}
       />
-    </div>;
+    </div>);
   }
 }
 
